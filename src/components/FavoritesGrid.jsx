@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import PokemonCard from './PokemonCard';
 import './FavoritesGrid.css';
+import Pagination from './Pagination';
 
 function FavoritesGrid({ favorites, showRemoveButton, handleRemoveFavorite }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,23 +36,12 @@ function FavoritesGrid({ favorites, showRemoveButton, handleRemoveFavorite }) {
         </div>
       </div>
       <div className="d-flex justify-content-center mt-2">
-        <nav aria-label="Page navigation">
-          <ul className="pagination">
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>&lt;</button>
-            </li>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <li key={index + 1} className={`page-item ${index + 1 === currentPage ? 'active' : ''}`}>
-                <button className="page-link" onClick={() => handlePageChange(index + 1)}>
-                  {index + 1}
-                </button>
-              </li>
-            ))}
-            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>&gt;</button>
-            </li>
-          </ul>
-        </nav>
+        <Pagination 
+          currentPage={currentPage} 
+          totalPages={totalPages} 
+          handlePageChange={handlePageChange}
+          main={false}
+        />
       </div>
     </div>
   );
