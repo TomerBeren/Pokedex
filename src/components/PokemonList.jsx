@@ -18,11 +18,11 @@ function PokemonList() {
   ];
 
   return (
-    <div className="container mt-2">
-      <div className="row gx-2 gy-1"> {/* Adjusted spacing */}
+    <div className="container mt-3">
+      <div className="row gx-5 gy-1"> {/* Adjusted spacing */}
         {placeholderPokemons.map((pokemon) => (
           <div key={pokemon.id} className="col-custom d-flex mb-3"> {/* Bootstrap grid classes for responsive design */}
-            <PokemonCard pokemon={pokemon} />
+            <PokemonCard pokemon={pokemon} className="list-card"/>
           </div>
         ))}
       </div>
