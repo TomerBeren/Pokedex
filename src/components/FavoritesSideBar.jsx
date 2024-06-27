@@ -1,14 +1,12 @@
-// src/components/FavoritesSideBar.jsx
 import React from 'react';
 import FilterBar from './FilterBar';
 import FavoritesGrid from './FavoritesGrid';
 
-function FavoritesSideBar() {
-
+function FavoritesSideBar({ caughtPokemons, handleRemoveFavorite }) {
   return (
-    <div className="p-3">
+    <div className="h-100 d-flex flex-column mt-3">
       <FilterBar />
-      {/*<FavoritesGrid favorites={placeholderFavorites} showRemoveButton={true} />*/}
+      <FavoritesGrid favorites={caughtPokemons} showRemoveButton={true} handleRemoveFavorite={handleRemoveFavorite} />
     </div>
   );
 }

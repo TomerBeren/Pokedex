@@ -1,5 +1,7 @@
-export async function getPokemons() {
-  const response = await fetch('https://pokeapi.co/api/v2/pokemon/');
+// src/services/pokemon.service.js
+
+export async function getPokemons(offset = 0, limit = 20) {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
   const data = await response.json();
   return data.results;
 }
@@ -24,3 +26,19 @@ export async function getPokemonDetailsByURL(url) {
   return transformedData;
 }
 
+export async function fetchAllPokemons() {
+  const allPokemons = [];
+  let offset = 0;
+  const limit = 100; // Number of Pokémon to fetch per request
+  let hasMore = true;
+
+  while (hasMore) {
+    const pokemons = await getPokemons(offset, limit);
+    allPokemons.push(...pokemons);
+
+    offset += limit; // Increment offset to fetch the next set of Pokémon
+    hasMore = pokemons.length === limit; // Check if there are more Pokémon to fetch
+  }
+
+  return allPokemons;
+}
