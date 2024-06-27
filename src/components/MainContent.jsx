@@ -5,13 +5,13 @@ import NavBar from './NavBar';
 import PokemonList from './PokemonList';
 import FavoritesSideBar from './FavoritesSideBar';
 import { getFavorites, addFavorite, removeFavorite } from '../services/favorites.service';
-import { fetchAllPokemons } from '../services/pokemon.service';
+import { fetchAllPokemons, getPokemonDetailsByURL } from '../services/pokemon.service';
 
 function MainContent() {
   const [caughtPokemons, setCaughtPokemons] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPokemons, setTotalPokemons] = useState(0);
-  const pokemonsPerPage = 20;
+  const pokemonsPerPage = 24;
   const pagesToShow = 5;
 
   useEffect(() => {
@@ -36,8 +36,12 @@ function MainContent() {
   }, []);
 
   const handleCatchPokemon = async (pokemon) => {
-    const favorites = await addFavorite(pokemon);
-    setCaughtPokemons(favorites);
+    try {
+      const favorites = await addFavorite(pokemon);
+      setCaughtPokemons(favorites);
+    } catch (error) {
+      console.error('Error catching Pokémon:', error);
+    }
   };
 
   const handleRemoveFavorite = async (pokemonId) => {

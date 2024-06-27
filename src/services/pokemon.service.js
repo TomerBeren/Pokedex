@@ -7,23 +7,33 @@ export async function getPokemons(offset = 0, limit = 20) {
 }
 
 export async function getPokemonDetailsByURL(url) {
-  const response = await fetch(url);
-  const data = await response.json();
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    // Transform the data
+    const transformedData = {
+      id: data.id,
+      name: data.name,
+      sprites: {
+        front_default: data.sprites.front_default,
+        back_default: data.sprites.back_default,
+        front_shiny: data.sprites.front_shiny,
+        back_shiny: data.sprites.back_shiny,
+      },
+      types: data.types.map(type => type.type.name),
+      weight: data.weight,
+      height: data.height,
+      abilities: data.abilities.map(ability => ability.ability.name),
+    };
 
-  // Transform the data
-  const transformedData = {
-    id: data.id,
-    name: data.name,
-    sprites: {
-      front_default: data.sprites.front_default,
-    },
-    types: data.types.map(type => type.type.name),
-    weight: data.weight,
-    height: data.height,
-    abilities: data.abilities.map(ability => ability.ability.name),
-  };
-
-  return transformedData;
+    return transformedData;
+  } catch (error) {
+    console.error('Error fetching Pokémon details:', error);
+    throw error;  // Rethrow the error after logging it
+  }
 }
 
 export async function fetchAllPokemons() {

@@ -1,3 +1,4 @@
+import { getPokemonDetailsByURL } from './pokemon.service';
 
 export async function getFavorites() {
   return new Promise((resolve) => {
@@ -9,14 +10,18 @@ export async function getFavorites() {
 }
 
 export async function addFavorite(pokemon) {
-  return new Promise((resolve) => {
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    if (!favorites.find((fav) => fav.id === pokemon.id)) {
-      favorites.push(pokemon);
-      localStorage.setItem("favorites", JSON.stringify(favorites));
+  return new Promise(async (resolve, reject) => {
+    try {
+      const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      if (!favorites.find((fav) => fav.id === pokemon.id)) {
+        favorites.push(pokemon);
+        localStorage.setItem("favorites", JSON.stringify(favorites));
+      }
+      resolve(favorites);
+    } catch (error) {
+      console.error('Failed to add favorite:', error);
+      reject(error);
     }
-   
-    resolve(favorites);
   });
 }
 
@@ -30,6 +35,7 @@ export async function removeFavorite(pokemonId) {
 }
 
 export function isFavorite(pokemon) {
+  console.log(pokemon.id)
   const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
   return favorites.some((fav) => fav.id === pokemon.id);
 }
