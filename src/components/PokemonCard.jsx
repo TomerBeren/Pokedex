@@ -5,7 +5,7 @@ import './PokemonList.css';
 
 function PokemonCard({ pokemon, showRemoveButton, className }) {
   const [showModal, setShowModal] = useState(false);
-
+  console.log(pokemon);
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
