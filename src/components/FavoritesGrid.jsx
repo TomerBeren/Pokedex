@@ -20,7 +20,7 @@ function FavoritesGrid({ favorites, showRemoveButton }) {
       {favoriteRows.map((row, rowIndex) => (
         <div className="row" key={rowIndex}>
           {row.map((pokemon) => (
-            <div key={pokemon.id} className="col-6 mb-3 d-flex">
+            <div key={pokemon.id} className="col-6 mb-3 justify-content-center d-flex">
               <PokemonCard 
                 pokemon={pokemon} 
                 showRemoveButton={showRemoveButton} 

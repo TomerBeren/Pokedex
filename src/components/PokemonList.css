@@ -4,6 +4,19 @@
     width: 12.5%; /* Adjust the width as needed */
     max-width: 12.5%; /* Ensure max width */
     padding-left: 4px; /* Minimal padding */
-    padding-right: 4px; /* Minimal padding */
+    padding-right: 8px; /* Minimal padding */
   }
+.list-card {
+  width: 165px;
+}  
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.card:hover {
+  transform: translateY(-10px) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4) !important;
+}
+.clickable-card {
+  cursor: pointer; /* Changes the cursor to pointer when hovering */
+}
   
