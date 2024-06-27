@@ -7,8 +7,6 @@ import MainContent from './components/MainContent';
 function App() {
   return (
     <Router>
-      <NavBar />
-      <hr className="m-0 mt-1" />
       <MainContent />
     </Router>
   );

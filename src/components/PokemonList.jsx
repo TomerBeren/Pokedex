@@ -1,20 +1,18 @@
+// src/components/PokemonList.jsx
 import React, { useState, useEffect } from 'react';
 import PokemonCard from './PokemonCard';
-import './PokemonList.css';
 import { getPokemons, getPokemonDetailsByURL } from '../services/pokemon.service';
+import './PokemonList.css';
 
-function PokemonList() {
+function PokemonList({ currentPage, pokemonsPerPage, handleCatchPokemon }) {
   const [pokemons, setPokemons] = useState([]);
 
   useEffect(() => {
     const fetchPokemons = async () => {
       try {
-        // Fetch the list of pokemons
-        const pokemonList = await getPokemons();
-        // Fetch details for each pokemon
-        const pokemonDetailsPromises = pokemonList.map(pokemon =>
-          getPokemonDetailsByURL(pokemon.url)
-        );
+        const offset = (currentPage - 1) * pokemonsPerPage;
+        const pokemonList = await getPokemons(offset, pokemonsPerPage);
+        const pokemonDetailsPromises = pokemonList.map(pokemon => getPokemonDetailsByURL(pokemon.url));
         const pokemonDetails = await Promise.all(pokemonDetailsPromises);
         setPokemons(pokemonDetails);
       } catch (error) {
@@ -23,14 +21,14 @@ function PokemonList() {
     };
 
     fetchPokemons();
-  }, []);
+  }, [currentPage, pokemonsPerPage]);
 
   return (
     <div className="container mt-3">
       <div className="row gx-5 gy-1">
         {pokemons.map((pokemon) => (
           <div key={pokemon.id} className="col-custom d-flex mb-3">
-            <PokemonCard pokemon={pokemon} className="list-card" />
+            <PokemonCard pokemon={pokemon} className="list-card" handleCatchPokemon={handleCatchPokemon} />
           </div>
         ))}
       </div>

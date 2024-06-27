@@ -1,10 +1,11 @@
 // src/components/PokemonDetails.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import './PokemonDetails.css';
 import PokemonAbilities from './PokemonAbilities';
 import PokemonStats from './PokemonStats';
 import PokemonTypes from './PokemonTypes';
+import { isFavorite } from '../services/favorites.service';
 
 const typeColors = {
   bug: "#26de81",
@@ -25,12 +26,42 @@ const typeColors = {
   water: "#0190FF",
 };
 
-function PokemonDetails({ show, handleClose, pokemon }) {
-  if (!pokemon) return null;
+function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
+  const [isCaught, setIsCaught] = useState(false);
+  const [catchDisabled, setCatchDisabled] = useState(false);
 
-  const handleCatch = () => {
-    console.log(`Caught ${pokemon.name}!`);
+  useEffect(() => {
+    if (pokemon) {
+      setIsCaught(isFavorite(pokemon));
+      setCatchDisabled(isFavorite(pokemon));
+    }
+  }, [pokemon]);
+
+  const handleCatch = async () => {
+    setCatchDisabled(true);
+    console.log(catchDisabled)
+    const success = await attemptCatch();
+    console.log(success)
+
+    if (success) {
+      await onCatch(pokemon);
+      console.log("caught")
+      setIsCaught(true);
+    } else {
+      setCatchDisabled(false);
+    }
   };
+
+  const attemptCatch = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const success = Math.random() > 0.5; // 50% chance of success
+        resolve(success);
+      }, 1000); // Simulate a 1 second delay
+    });
+  };
+
+  if (!pokemon) return null;
 
   const primaryType = pokemon.types[0]; // Assuming the first type is the primary type
   const backgroundColor = typeColors[primaryType] || "#FFF";
@@ -59,8 +90,8 @@ function PokemonDetails({ show, handleClose, pokemon }) {
         <Button variant="secondary" onClick={handleClose}>
           Back to List
         </Button>
-        <Button variant="primary" onClick={handleCatch}>
-          Catch
+        <Button variant="primary" onClick={handleCatch} disabled={catchDisabled || isCaught}>
+          {isCaught ? "Caught" : "Catch"}
         </Button>
       </Modal.Footer>
     </Modal>

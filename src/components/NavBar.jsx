@@ -1,9 +1,10 @@
 // src/components/Navbar.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import pokeball from '../assets/pokeball.svg';
 
-function Navbar() {
+function Navbar({favoriteCount}) {
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white w-100 align-items-center">
       <div className="container-fluid">
@@ -14,7 +15,10 @@ function Navbar() {
         <div className="collapse navbar-collapse justify-content-end">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <Link className="nav-link" to="/favorites">Favorites</Link>
+              <Link className="nav-link" to="/favorites">
+                <span>Favorites </span>
+                <span className="fw-bold h6">{favoriteCount}</span>
+              </Link>
             </li>
           </ul>
         </div>
