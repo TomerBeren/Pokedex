@@ -1,5 +1,23 @@
 /* src/components/FavoritesGrid.css */
 .favorite-card {
-    width: 165px; /* Adjust the width as needed */
+  width: 100%; /* Make card width 100% by default */
+  max-width: 165px; /* Set maximum width */
+}
+
+@media (min-width: 576px) {
+  .favorite-card {
+    max-width: 165px; /* Adjust the width for small screens */
   }
-  
+}
+
+@media (min-width: 768px) {
+  .favorite-card {
+    max-width: 165px; /* Adjust the width for medium screens */
+  }
+}
+
+@media (min-width: 992px) {
+  .favorite-card {
+    max-width: 165px; /* Adjust the width for large screens */
+  }
+}

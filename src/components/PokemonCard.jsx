@@ -1,4 +1,3 @@
-// src/components/PokemonCard.jsx
 import React, { useState } from 'react';
 import PokemonDetails from './PokemonDetails';
 import AnimatedPokemonImage from './AnimatedPokemonImage';
