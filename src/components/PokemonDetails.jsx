@@ -1,6 +1,8 @@
 // src/components/PokemonDetails.jsx
 import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './PokemonDetails.css';
 import PokemonAbilities from './PokemonAbilities';
 import PokemonStats from './PokemonStats';
@@ -23,6 +25,8 @@ const typeColors = {
   poison: "#6c5ce7",
   psychic: "#a29bfe",
   rock: "#b8a038",
+  steel: "#5a8ea2", 
+  dark: "#705746", 
   water: "#0190FF",
 };
 
@@ -35,19 +39,18 @@ function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
       setIsCaught(isFavorite(pokemon));
       setCatchDisabled(isFavorite(pokemon));
     }
-  }, [pokemon]);
+  }, [pokemon, show]);
 
   const handleCatch = async () => {
     setCatchDisabled(true);
-    console.log(catchDisabled)
     const success = await attemptCatch();
-    console.log(success)
-
+    
     if (success) {
       await onCatch(pokemon);
-      console.log("caught")
+      toast.success(`Caught ${pokemon.name}!`);
       setIsCaught(true);
     } else {
+      toast.error(`Failed to catch ${pokemon.name}. Try again!`);
       setCatchDisabled(false);
     }
   };
@@ -79,7 +82,7 @@ function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
             className="pokemon-image"
           />
           <h2 className="poke-name">{pokemon.name}</h2>
-          <PokemonTypes types={pokemon.types} />
+          <PokemonTypes types={pokemon.types} typeColors={typeColors} />
           <div className="details">
             <PokemonStats height={pokemon.height} weight={pokemon.weight} />
             <PokemonAbilities abilities={pokemon.abilities} />
