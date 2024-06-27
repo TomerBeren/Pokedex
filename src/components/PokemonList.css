@@ -1,0 +1,9 @@
+/* src/components/PokemonList.css */
+.col-custom {
+    flex: 0 0 auto;
+    width: 12.5%; /* Adjust the width as needed */
+    max-width: 12.5%; /* Ensure max width */
+    padding-left: 4px; /* Minimal padding */
+    padding-right: 4px; /* Minimal padding */
+  }
+  
