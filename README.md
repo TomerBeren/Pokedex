@@ -45,3 +45,8 @@ The Pokedex Application is a React-based project that allows users to browse and
 - View your caught Pokémon in the favorites sidebar.
 - Remove a Pokémon from the favorites list using the remove button.
 - Filter the favorites list by name or by type using the search bar or the type dropdown.
+
+## Photos
+![Screenshot 2024-06-28 181339](https://github.com/TomerBeren/Pokedex/assets/118894673/b5a42911-a712-4511-869b-462b826980b0)
+![Screenshot 2024-06-28 181419](https://github.com/TomerBeren/Pokedex/assets/118894673/a17c3a8b-34e7-4bf2-b9c0-34323b9299dd)
+
