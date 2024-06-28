@@ -7,8 +7,14 @@ html, body, #root {
 .bg-gray {
     background-color: #f0f2f5;
 }
+
 .animated-pokemon-image {
-    width: 110px;
-    height: 110px;
-  }
+    width: 100%;  /* Makes the image responsive */
+    height: auto;  /* Maintains the aspect ratio */
+    display: block;  /* Removes any extra space below the image */
+    margin: 0 auto;  /* Centers the image in the card */
+}
+
+
+  
   
