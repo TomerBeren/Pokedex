@@ -5,6 +5,7 @@
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Photos](#photos)
 
 ## Introduction
 The Pokedex Application is a React-based project that allows users to browse and catch Pokémon. Users can view details of each Pokémon, attempt to catch them, and see their caught Pokémon in a favorites sidebar. The application integrates with the PokeAPI to fetch Pokémon data.
