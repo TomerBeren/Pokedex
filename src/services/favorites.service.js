@@ -1,41 +1,47 @@
-import { getPokemonDetailsByURL } from './pokemon.service';
+// src/services/favorites.service.js
 
+// Retrieve all favorite Pokemons from localStorage
 export async function getFavorites() {
   return new Promise((resolve) => {
     const favorites = localStorage.getItem("favorites");
     setTimeout(() => {
       resolve(JSON.parse(favorites) || []);
-    }, 500);
+    }, 500); // Simulate delay for asynchronous behavior
   });
 }
 
+// Add a Pokemon to favorites in localStorage
 export async function addFavorite(pokemon) {
   return new Promise(async (resolve, reject) => {
     try {
       const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      // Check if the Pokemon is not already in favorites
       if (!favorites.find((fav) => fav.id === pokemon.id)) {
-        favorites.push(pokemon);
-        localStorage.setItem("favorites", JSON.stringify(favorites));
+        favorites.push(pokemon); // Add the Pokemon to favorites
+        localStorage.setItem("favorites", JSON.stringify(favorites)); // Update localStorage
       }
-      resolve(favorites);
+      resolve(favorites); // Resolve with updated favorites array
     } catch (error) {
       console.error('Failed to add favorite:', error);
-      reject(error);
+      reject(error); // Reject if there's an error
     }
   });
 }
 
+// Remove a Pokemon from favorites in localStorage
 export async function removeFavorite(pokemonId) {
   return new Promise((resolve) => {
     let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    // Filter out the Pokemon with the specified ID
     favorites = favorites.filter((fav) => fav.id !== pokemonId);
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-    resolve(favorites);
+    localStorage.setItem("favorites", JSON.stringify(favorites)); // Update localStorage
+    resolve(favorites); // Resolve with updated favorites array
   });
 }
 
+// Check if a Pokemon is in favorites
 export function isFavorite(pokemon) {
-  console.log(pokemon.id)
   const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  // Check if any favorite Pokemon has the same ID as the given Pokemon
   return favorites.some((fav) => fav.id === pokemon.id);
 }
