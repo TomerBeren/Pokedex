@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 function Pagination({ currentPage, totalPages, handlePageChange, main }) {
+   // Number of page links to show in the pagination
   let pagesToShow = 5
   if(!main){
     pagesToShow = 3;
   }
-   // Number of page links to show in the pagination
-
+  
   // Function to get the initial start page number
   const getInitialStart = () => {
     const start = Math.max(1, currentPage - Math.floor(pagesToShow / 2));
