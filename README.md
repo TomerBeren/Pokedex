@@ -22,7 +22,7 @@ The Pokedex Application is a React-based project that allows users to browse and
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/Pokedex.git
+   git clone https://github.com/TomerBeren/Pokedex.git
    cd Pokedex
    ```
 
