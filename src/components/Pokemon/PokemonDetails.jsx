@@ -1,4 +1,3 @@
-// src/components/PokemonDetails/PokemonDetails.jsx
 import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
@@ -13,28 +12,52 @@ import typeColors from '../../assets/typeColors';
 function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
   // State to track if the Pokemon is caught
   const [isCaught, setIsCaught] = useState(false);
-  // State to disable the catch button while catching
+  // State to disable the catch button while catching or after two attempts
   const [catchDisabled, setCatchDisabled] = useState(false);
+  // State to track the number of catch attempts for each Pokemon by its ID
+  const [catchAttempts, setCatchAttempts] = useState({});
 
   useEffect(() => {
     if (pokemon) {
-      setIsCaught(isFavorite(pokemon)); // Check if the Pokemon is already caught
-      setCatchDisabled(isFavorite(pokemon)); // Disable the catch button if caught
+      const attempts = catchAttempts[pokemon.id] || 0;
+      // Check if the Pokemon is already caught or if it has reached the max attempts
+      setIsCaught(isFavorite(pokemon));
+      setCatchDisabled(isFavorite(pokemon) || attempts >= 2);
     }
-  }, [pokemon, show]);
+  }, [pokemon, show, catchAttempts]);
 
-  // Function to handle the catch action
+  // Function to handle catching the Pokemon
   const handleCatch = async () => {
-    setCatchDisabled(true);
-    const success = await attemptCatch();
-    
+    const attempts = catchAttempts[pokemon.id] || 0;
+
+    // Disable the button if max attempts are reached
+    if (attempts >= 2) {
+      setCatchDisabled(true);
+      return;
+    }
+
+    setCatchDisabled(true); // Disable the button during the catch attempt
+    const success = await attemptCatch(); // Simulate the catch attempt
+
     if (success) {
       await onCatch(pokemon);
       toast.success(`Caught ${pokemon.name}!`);
       setIsCaught(true);
     } else {
-      toast.error(`Failed to catch ${pokemon.name}. Try again!`);
-      setCatchDisabled(false);
+      const newAttempts = attempts + 1;
+      // Notify the user about the failed attempt
+      if (newAttempts === 2) {
+        toast.error(`Failed to catch ${pokemon.name}. No more attempts`);
+      } else {
+        toast.error(`Failed to catch ${pokemon.name}. Try again!`);
+      }
+      // Update the catch attempts state
+      setCatchAttempts({
+        ...catchAttempts,
+        [pokemon.id]: newAttempts,
+      });
+      // Disable the button if max attempts are reached
+      setCatchDisabled(newAttempts >= 2);
     }
   };
 
@@ -48,10 +71,11 @@ function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
     });
   };
 
-  if (!pokemon) return null; // If no Pokemon is provided, return null
+  // Return null if no Pokemon is provided
+  if (!pokemon) return null;
 
   // Get the primary type and corresponding background color
-  const primaryType = pokemon.types[0]; // Assuming the first type is the primary type
+  const primaryType = pokemon.types[0];
   const backgroundColor = typeColors[primaryType] || "#FFF";
 
   return (
@@ -85,9 +109,9 @@ function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
         <Button variant="secondary" onClick={handleClose}>
           Back to List
         </Button>
-        {/* Catch button, disabled if already caught or catching */}
+        {/* Catch button, disabled if already caught or after max attempts */}
         <Button variant="primary" onClick={handleCatch} disabled={catchDisabled || isCaught}>
-          {isCaught ? "Caught" : "Catch"}
+          {isCaught ? "Caught" : (catchAttempts[pokemon.id] >= 2 ? "No More Attempts" : "Catch")}
         </Button>
       </Modal.Footer>
     </Modal>
