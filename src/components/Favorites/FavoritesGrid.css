@@ -1,0 +1,60 @@
+/* src/components/FavoritesGrid.css */
+
+/* Default favorite card width */
+.favorite-card {
+  width: 100%; /* Make card width 100% by default */
+  max-width: 165px; /* Set maximum width */
+}
+
+/* Adjusting column layout for screens up to 1280px */
+@media (max-width: 1280px) {
+  .row > .col-4 {
+    flex: 0 0 50%; /* Set to take half of the row */
+    max-width: 50%;
+  }
+}
+
+/* Adjusting for one card per row at 960px */
+@media (max-width: 960px) {
+  .row > .col-4 {
+    flex: 0 0 100%; /* Make each column take the full width of the row */
+    max-width: 100%; /* Ensure the column does not exceed the full width */
+  }
+}
+
+/* Adjusting for four cards per row at 640px */
+@media (max-width: 640px) {
+  .row > .col-4 {
+    flex: 0 0 25%; /* Set to take a quarter of the row */
+    max-width: 25%;
+  }
+}
+
+/* Adjusting for two cards per row at 384px */
+@media (max-width: 384px) {
+  .row > .col-4 {
+    flex: 0 0 50%; /* Set to take half of the row */
+    max-width: 50%;
+  }
+}
+
+/* Adjust favorite card width for small screens */
+@media (min-width: 576px) {
+  .favorite-card {
+    max-width: 165px; /* Adjust the width for small screens */
+  }
+}
+
+/* Adjust favorite card width for medium screens */
+@media (min-width: 768px) {
+  .favorite-card {
+    max-width: 165px; /* Adjust the width for medium screens */
+  }
+}
+
+/* Adjust favorite card width for large screens */
+@media (min-width: 992px) {
+  .favorite-card {
+    max-width: 165px; /* Adjust the width for large screens */
+  }
+}

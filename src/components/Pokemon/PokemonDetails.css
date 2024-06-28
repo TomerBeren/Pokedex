@@ -1,0 +1,164 @@
+/* Global styles */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif; /* Use Poppins font */
+}
+
+/* Body background color */
+body {
+  background-color: #eff3ff; /* Light blue background */
+}
+
+/* Centered modal */
+.modal-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Styles for the Pokemon card */
+.pokemon-card {
+  position: relative;
+  width: 100%;
+  padding: 30px 20px;
+  background-color: white;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15); /* Box shadow for depth */
+  border-radius: 10px; /* Rounded corners */
+  color: #333; /* Dark text color */
+  overflow: hidden; /* Hide overflowing elements */
+}
+
+/* Background circle inside the Pokemon card */
+.pokemon-card::before {
+  content: '';
+  position: absolute;
+  top: -200px; 
+  left: 50%;
+  width: 120%; /* Make it wider */
+  height: 400px; /* Increase height for more prominent circle */
+  background-color: var(--theme-color); /* Will be set dynamically */
+  border-radius: 50%; /* Circular shape */
+  transform: translateX(-50%);
+}
+
+/* Styles for the Pokemon ID */
+.id {
+  width: 80px;
+  background-color: #ffffff; /* White background */
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 30px; /* Rounded corners */
+  margin-left: auto; 
+  font-weight: 550;
+  color: #000; /* Black text color */
+  position: absolute; /* Position absolute to place on top of circle */
+  top: 20px; 
+  right: 20px; /* Position to the right of the card */
+  z-index: 1; /* Ensure it's above the circle */
+}
+
+/* Styles for the Pokemon image */
+.pokemon-image {
+  display: block;
+  width: 180px;
+  max-height: 200px;
+  margin: 20px auto; /* Center image */
+  position: relative;
+  top: -20px; /* Adjust position relative to circle */
+  z-index: 1; /* Ensure it's above the circle */
+}
+
+/* Styles for the Pokemon name */
+.poke-name {
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Styles for the types section */
+.types {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+/* Styles for individual type bubbles */
+.type-bubble {
+  padding: 5px 20px;
+  border-radius: 20px; /* Rounded corners */
+  color: #ffffff; /* White text color */
+  margin: 0 5px; /* Margin between bubbles */
+}
+
+/* Styles for the details section */
+.details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+/* Container for individual detail boxes */
+.details-box,
+.abilities-box {
+  width: 45%;
+}
+
+/* Styles for details box items */
+.details-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+/* Individual detail item styling */
+.details-box .detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  font-size: 1rem;
+  text-align: center;
+  flex: 1;
+}
+
+/* Styles for detail item text */
+.details-box .detail-item p {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Styles for detail item span */
+.details-box .detail-item span {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Container for abilities box */
+.abilities-box {
+  text-align: left;
+}
+
+/* Header for abilities section */
+.abilities-box h3 {
+  margin-bottom: 10px;
+  font-weight: 545;
+}
+
+/* Common margin for text in details and abilities boxes */
+.details-box h3,
+.details-box p,
+.abilities-box p {
+  margin: 5px 0;
+}
+
+/* Styles for individual ability items */
+.ability-item {
+  background-color: #f0f0f0; /* Light grey background */
+  padding: 5px 10px;
+  border-radius: 10px; /* Rounded corners */
+  margin-bottom: 5px;
+  font-weight: 550;
+}

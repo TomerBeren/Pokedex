@@ -1,0 +1,80 @@
+/* Base styles for the card title and text */
+.card .card-body .card-title {
+    text-align: center !important;
+    font-size: 1rem !important; /* Base size */
+}
+
+.card .card-body .card-text {
+    text-align: center !important;
+    font-size: 0.75rem !important; /* Base size */
+}
+
+/* Medium screens (tablets, up to 768px) */
+@media (max-width: 768px) {
+    .card .card-body .card-title {
+        font-size: 0.9rem !important; /* Adjust font size for medium screens */
+    }
+    .card .card-body .card-text {
+        font-size: 0.7rem !important; /* Adjust font size for medium screens */
+    }
+}
+
+/* Small screens (large phones, up to 576px) */
+@media (max-width: 576px) {
+    .card .card-body .card-title {
+        font-size: 0.8rem !important; /* Adjust font size for small screens */
+    }
+    .card .card-body .card-text {
+        font-size: 0.65rem !important; /* Adjust font size for small screens */
+    }
+}
+
+/* Larger screens (large desktops, up to 1200px) */
+@media (min-width: 992px) {
+    .card .card-body .card-title {
+        font-size: 1.1rem !important; /* Adjust font size for larger screens */
+    }
+    .card .card-body .card-text {
+        font-size: 0.85rem !important; /* Adjust font size for larger screens */
+    }
+}
+
+/* Larger screens (desktops, from 1024px to 1200px) */
+@media (min-width: 1024px) {
+    .card .card-body .card-title {
+        font-size: 0.9rem !important; /* Adjust font size for 1024px and up */
+    }
+    .card .card-body .card-text {
+        font-size: 0.85rem !important; /* Adjust font size for 1024px and up */
+    }
+}
+
+/* Extra large screens (wide desktops, from 1200px to 1395px) */
+@media (min-width: 1200px) {
+    .card .card-body .card-title {
+        font-size: 0.9rem !important; /* Adjust font size for 1200px and up */
+    }
+    .card .card-body .card-text {
+        font-size: 0.9rem !important; /* Adjust font size for 1200px and up */
+    }
+}
+
+/* Extra large screens (wide desktops, from 1395px to 1536px) */
+@media (min-width: 1395px) {
+    .card .card-body .card-title {
+        font-size: 0.8rem !important; /* Adjust font size for 1395px and up */
+    }
+    .card .card-body .card-text {
+        font-size: 0.9rem !important; /* Adjust font size for 1395px and up */
+    }
+}
+
+/* Ultra large screens (above 1536px) */
+@media (min-width: 1536px) {
+    .card .card-body .card-title {
+        font-size: 0.9rem !important; /* Adjust font size for ultra large screens */
+    }
+    .card .card-body .card-text {
+        font-size: 0.9rem !important; /* Adjust font size for ultra large screens */
+    }
+}

@@ -1,0 +1,84 @@
+/* Custom column width for Pokemon cards */
+.col-custom {
+  flex: 0 0 auto;
+  width: 12.5%; /* Base width for 8 columns */
+  max-width: 12.5%;
+  padding: 0 4px; /* Ensure padding does not cause overflow */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+/* Row with left padding for list */
+.list-row {
+  padding-left: 20px; /* Adjust the space as needed */
+}
+
+/* Custom width for list cards */
+.list-card {
+  width: 90%;
+}
+
+/* Card transition effects */
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Card hover effects */
+.card:hover {
+  transform: translateY(-10px) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Change cursor to pointer on hover */
+.clickable-card {
+  cursor: pointer; /* Changes the cursor to pointer when hovering */
+}
+
+/* Media queries for responsive design */
+
+/* 7 columns for screens up to 1280px */
+@media (max-width: 1280px) {
+  .col-custom {
+    width: 14.2857%; /* 100 / 7 = 14.2857% */
+    max-width: 14.2857%;
+  }
+}
+
+/* 6 columns for screens up to 1200px */
+@media (max-width: 1200px) {
+  .col-custom {
+    width: 16.66%; /* 100 / 6 = 16.66% */
+    max-width: 16.66%;
+  }
+}
+
+/* 5 columns for screens up to 992px */
+@media (max-width: 992px) {
+  .col-custom {
+    width: 20%; /* 100 / 5 = 20% */
+    max-width: 20%;
+  }
+}
+
+/* 4 columns for screens up to 768px */
+@media (max-width: 768px) {
+  .col-custom {
+    width: 25%; /* 100 / 4 = 25% */
+    max-width: 25%;
+  }
+}
+
+/* 3 columns for screens up to 576px */
+@media (max-width: 576px) {
+  .col-custom {
+    width: 33.33%; /* 100 / 3 = 33.33% */
+    max-width: 33.33%;
+  }
+}
+
+/* 2 columns for screens up to 400px */
+@media (max-width: 400px) {
+  .col-custom {
+    width: 50%; /* 100 / 2 = 50% */
+    max-width: 50%;
+  }
+}
