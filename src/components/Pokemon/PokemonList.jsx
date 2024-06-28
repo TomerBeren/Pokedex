@@ -26,7 +26,7 @@ function PokemonList({ currentPage, pokemonsPerPage, handleCatchPokemon }) {
   }, [currentPage, pokemonsPerPage]);
 
   return (
-    <div className="container mt-3">
+    <div className="container-fluid mt-3">
       <div className="row list-row gx-5 gy-1">
         {/* Map through the Pokemons and render a PokemonCard for each */}
         {pokemons.map((pokemon) => (

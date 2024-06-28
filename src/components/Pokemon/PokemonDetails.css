@@ -12,11 +12,9 @@ body {
 }
 
 /* Centered modal */
-.modal-centered {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+.modal-centered .modal-dialog {
+  max-width: 60%; /* Default maximum width of the modal */
+  width: auto;
 }
 
 /* Styles for the Pokemon card */
@@ -75,6 +73,8 @@ body {
 .poke-name {
   text-align: center;
   font-weight: 600;
+  position: relative;
+  z-index: 2; /* Ensure it's above the circle */
 }
 
 /* Styles for the types section */
@@ -161,4 +161,81 @@ body {
   border-radius: 10px; /* Rounded corners */
   margin-bottom: 5px;
   font-weight: 550;
+}
+
+/* Media queries */
+
+/* Medium screens (tablets, up to 768px) */
+@media (max-width: 768px) {
+  .modal-centered .modal-dialog {
+    max-width: 90%; /* Adjust width for medium screens */
+  }
+
+  .pokemon-card {
+    padding: 20px 10px;
+  }
+
+  .pokemon-image {
+    width: 150px;
+  }
+}
+
+/* Small screens (large phones, up to 576px) */
+@media (max-width: 576px) {
+  .modal-centered .modal-dialog {
+    max-width: 100%; /* Adjust width for small screens */
+  }
+
+  .pokemon-card {
+    padding: 15px 5px;
+  }
+
+  .pokemon-image {
+    width: 120px;
+  }
+}
+
+/* Large screens (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+  .modal-centered .modal-dialog {
+    max-width: 50%; /* Adjust width for large screens */
+  }
+
+  .pokemon-card {
+    padding: 30px 25px;
+  }
+
+  .pokemon-image {
+    width: 200px;
+  }
+}
+
+/* Extra large screens (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .modal-centered .modal-dialog {
+    max-width: 40%; /* Adjust width for extra large screens */
+  }
+
+  .pokemon-card {
+    padding: 35px 30px;
+  }
+
+  .pokemon-image {
+    width: 220px;
+  }
+}
+
+/* Ultra large screens (wide desktops, 1440px and up) */
+@media (min-width: 1440px) {
+  .modal-centered .modal-dialog {
+    max-width: 30%; /* Adjust width for ultra large screens */
+  }
+
+  .pokemon-card {
+    padding: 40px 35px;
+  }
+
+  .pokemon-image {
+    width: 240px;
+  }
 }
