@@ -1,4 +1,3 @@
-// src/components/Pagination/Pagination.jsx
 import React, { useState, useEffect } from 'react';
 
 function Pagination({ currentPage, totalPages, handlePageChange, main }) {
@@ -13,24 +12,27 @@ function Pagination({ currentPage, totalPages, handlePageChange, main }) {
 
   // State to track the dynamic start and end of the page range
   const [dynamicStart, setDynamicStart] = useState(getInitialStart());
-  const [dynamicEnd, setDynamicEnd] = useState(Math.min(totalPages, dynamicStart + pagesToShow - 1));
+  const [dynamicEnd, setDynamicEnd] = useState(Math.min(totalPages, getInitialStart() + pagesToShow - 1));
 
   useEffect(() => {
     // Recalculate the start and end when totalPages changes
-    setDynamicStart(getInitialStart());
-    setDynamicEnd(Math.min(totalPages, dynamicStart + pagesToShow - 1));
+    const start = getInitialStart();
+    setDynamicStart(start);
+    setDynamicEnd(Math.min(totalPages, start + pagesToShow - 1));
   }, [totalPages]);
 
   useEffect(() => {
     // Adjust the range when boundary conditions are met
-    if (currentPage === dynamicEnd + 1 && currentPage < totalPages) {
-      setDynamicStart(prevStart => Math.min(totalPages - pagesToShow + 1, prevStart + 1));
-      setDynamicEnd(prevEnd => Math.min(totalPages, prevEnd + 1));
-    } else if (currentPage === dynamicStart - 1 && currentPage > 1) {
-      setDynamicStart(prevStart => Math.max(1, prevStart - 1));
-      setDynamicEnd(prevEnd => Math.max(pagesToShow, prevEnd - 1));
+    if (currentPage > dynamicEnd) {
+      const newStart = dynamicStart + pagesToShow;
+      setDynamicStart(newStart);
+      setDynamicEnd(Math.min(totalPages, newStart + pagesToShow - 1));
+    } else if (currentPage < dynamicStart) {
+      const newStart = dynamicStart - pagesToShow;
+      setDynamicStart(newStart);
+      setDynamicEnd(Math.min(totalPages, newStart + pagesToShow - 1));
     }
-  }, [currentPage, totalPages]);
+  }, [currentPage]);
 
   // Generate the page numbers to be displayed
   const pageNumbers = [];
@@ -38,12 +40,36 @@ function Pagination({ currentPage, totalPages, handlePageChange, main }) {
     pageNumbers.push(i);
   }
 
+  // Handle previous page button click
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+      if (currentPage - 1 < dynamicStart) {
+        const newStart = Math.max(1, dynamicStart - pagesToShow);
+        setDynamicStart(newStart);
+        setDynamicEnd(Math.min(totalPages, newStart + pagesToShow - 1));
+      }
+    }
+  };
+
+  // Handle next page button click
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+      if (currentPage + 1 > dynamicEnd) {
+        const newStart = dynamicStart + pagesToShow;
+        setDynamicStart(newStart);
+        setDynamicEnd(Math.min(totalPages, newStart + pagesToShow - 1));
+      }
+    }
+  };
+
   return (
     <nav aria-label="Page navigation" className={`${main ? 'mt-3 d-flex justify-content-center' : ''}`}>
       <ul className="pagination">
         {/* Previous page button */}
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>&lt;</button>
+          <button className="page-link" onClick={handlePrevPage}>&lt;</button>
         </li>
         {/* Page number buttons */}
         {pageNumbers.map(page => (
@@ -53,7 +79,7 @@ function Pagination({ currentPage, totalPages, handlePageChange, main }) {
         ))}
         {/* Next page button */}
         <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>&gt;</button>
+          <button className="page-link" onClick={handleNextPage}>&gt;</button>
         </li>
       </ul>
     </nav>
