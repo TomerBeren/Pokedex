@@ -14,8 +14,10 @@ function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
   const [isCaught, setIsCaught] = useState(false);
   // State to disable the catch button while catching or after two attempts
   const [catchDisabled, setCatchDisabled] = useState(false);
-  // State to track the number of catch attempts for each Pokemon by its ID
-  const [catchAttempts, setCatchAttempts] = useState({});
+ // Initialize catchAttempts from local storage or empty object
+  const [catchAttempts, setCatchAttempts] = useState(() => {
+    return JSON.parse(localStorage.getItem('catchAttempts')) || {};
+  });
 
   useEffect(() => {
     if (pokemon) {
@@ -25,6 +27,11 @@ function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
       setCatchDisabled(isFavorite(pokemon) || attempts >= 2);
     }
   }, [pokemon, show, catchAttempts]);
+
+  useEffect(() => {
+    // Update local storage whenever catchAttempts changes
+    localStorage.setItem('catchAttempts', JSON.stringify(catchAttempts));
+  }, [catchAttempts]);
 
   // Function to handle catching the Pokemon
   const handleCatch = async () => {
