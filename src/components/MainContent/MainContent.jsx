@@ -1,24 +1,17 @@
 // src/components/MainContent/MainContent.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext} from 'react';
 import NavBar from '../NavBar/NavBar';
 import PokemonList from '../Pokemon/PokemonList';
 import FavoritesSideBar from '../Favorites/FavoritesSideBar';
 import Pagination from '../Pagination/Pagination';
 import { getFavorites, addFavorite, removeFavorite } from '../../services/favorites.service';
-import { fetchAllPokemons } from '../../services/pokemon.service';
+import PokemonContext from '../../contexts/PokemonContext';
 
 function MainContent() {
-  // State to track caught Pokemons
-  const [caughtPokemons, setCaughtPokemons] = useState([]);
-  // State to track the current page number
+  const { caughtPokemons, allPokemons, totalPokemons, setCaughtPokemons } = useContext(PokemonContext);
   const [currentPage, setCurrentPage] = useState(1);
-  // State to track the total number of Pokemons
-  const [totalPokemons, setTotalPokemons] = useState(
-    localStorage.getItem('totalPokemons') ? Number(localStorage.getItem('totalPokemons')) : null
-  );
-  // Number of Pokemons to display per page
   const pokemonsPerPage = 24;
-  
+
   // Fetch favorite Pokemons when the component mounts
   useEffect(() => {
     async function fetchFavorites() {
@@ -27,25 +20,7 @@ function MainContent() {
     }
     fetchFavorites();
   }, []);
-
-  // Fetch the total number of Pokemons only once when the component mounts
-  useEffect(() => {
-    const fetchTotalPokemons = async () => {
-      try {
-        const allPokemons = await fetchAllPokemons();
-        const total = allPokemons.length;
-        setTotalPokemons(total);
-        localStorage.setItem('totalPokemons', total);
-      } catch (error) {
-        console.error('Failed to fetch total Pokemons', error);
-      }
-    };
-
-    if (totalPokemons === null) {
-      fetchTotalPokemons();
-    }
-  }, [totalPokemons]);
-
+ 
   // Handle catching a Pokemon and updating the favorite list
   const handleCatchPokemon = async (pokemon) => {
     try {
@@ -84,7 +59,8 @@ function MainContent() {
           {/* Main area for displaying the list of Pokemons and pagination */}
           <div className="col-12 col-md-9 bg-gray d-flex flex-column">
             <div className="flex-grow-1">
-              <PokemonList 
+              <PokemonList
+                pokemons={allPokemons} 
                 handleCatchPokemon={handleCatchPokemon} 
                 currentPage={currentPage} 
                 pokemonsPerPage={pokemonsPerPage}
