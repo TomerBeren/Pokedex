@@ -38,6 +38,12 @@ export const PokemonProvider = ({ children }) => {
         };
        
         fetchPokemons(); // Execute the fetch operation.
+        
+          // Cleanup function to clear session storage when the component unmounts.
+          return () => {
+            sessionStorage.removeItem('allPokemons');
+            sessionStorage.removeItem('totalPokemons');
+        };
     }, []);
 
     // Context provider that supplies caught and all Pokémon data to child components.

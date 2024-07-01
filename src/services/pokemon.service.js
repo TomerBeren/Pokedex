@@ -51,13 +51,13 @@ export async function fetchAllPokemons() {
 
   while (hasMore) {
     // Fetch a batch of Pokémon and update total count.
-    const [pokemons, pokemonCount] = await fetchPokemonsBatch(offset, limit);
+    const [pokemons, pokemonCount] = await getPokemons(offset, limit);
     if (totalPokemonsCount === 0) {
       totalPokemonsCount = pokemonCount;
     }
 
     // Fetch detailed data for each Pokémon in the batch.
-    const detailsPromises = pokemons.map(pokemon => fetchPokemonDetails(pokemon.url));
+    const detailsPromises = pokemons.map(pokemon => getPokemonDetailsByURL(pokemon.url));
     const detailedPokemons = await Promise.all(detailsPromises);
     allPokemons.push(...detailedPokemons);
 
