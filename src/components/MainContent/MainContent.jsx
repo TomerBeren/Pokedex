@@ -8,7 +8,7 @@ import { getFavorites, addFavorite, removeFavorite } from '../../services/favori
 import PokemonContext from '../../contexts/PokemonContext';
 
 function MainContent() {
-  const { caughtPokemons, allPokemons, totalPokemons, setCaughtPokemons } = useContext(PokemonContext);
+  const { caughtPokemons, totalPokemons, setCaughtPokemons } = useContext(PokemonContext);
   const [currentPage, setCurrentPage] = useState(1);
   const pokemonsPerPage = 24;
 
@@ -60,7 +60,6 @@ function MainContent() {
           <div className="col-12 col-md-9 bg-gray d-flex flex-column">
             <div className="flex-grow-1">
               <PokemonList
-                pokemons={allPokemons} 
                 handleCatchPokemon={handleCatchPokemon} 
                 currentPage={currentPage} 
                 pokemonsPerPage={pokemonsPerPage}
