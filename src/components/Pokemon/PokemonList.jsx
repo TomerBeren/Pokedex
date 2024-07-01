@@ -1,11 +1,13 @@
 // src/components/PokemonList/PokemonList.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PokemonCard from './PokemonCard';
+import PokemonContext from '../../contexts/PokemonContext';
 import './PokemonList.css';
 
-function PokemonList({pokemons, currentPage, pokemonsPerPage, handleCatchPokemon }) {
+function PokemonList({currentPage, pokemonsPerPage, handleCatchPokemon }) {
+  const { allPokemons, firstBatch } = useContext(PokemonContext);
   // State to hold the list of Pokemons
-  const [currentPokemons, setCurrentPokemons] = useState([]);
+  const [currentPokemons, setCurrentPokemons] = useState(firstBatch);
   
   useEffect(() => {
     // Function to fetch Pokemons based on current page and items per page
@@ -15,7 +17,7 @@ function PokemonList({pokemons, currentPage, pokemonsPerPage, handleCatchPokemon
         const startIndex = (currentPage - 1) * pokemonsPerPage;
         const endIndex = startIndex + pokemonsPerPage;
          // Set the current Pokémon slice to state.
-        const pokemonList = pokemons.slice(startIndex, endIndex);
+        const pokemonList = allPokemons.slice(startIndex, endIndex);
         setCurrentPokemons(pokemonList);
       } catch (error) {
         console.error('Failed to fetch pokemons', error);
@@ -23,7 +25,7 @@ function PokemonList({pokemons, currentPage, pokemonsPerPage, handleCatchPokemon
     };
 
     fetchPokemons();
-  }, [currentPage, pokemonsPerPage]);
+  }, [currentPage, pokemonsPerPage, allPokemons]);
 
   return (
     <div className="container-fluid mt-3">
