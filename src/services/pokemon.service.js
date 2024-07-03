@@ -3,8 +3,11 @@
 // Fetches a list of Pokémon from PokeAPI based on offset and limit
 export async function getPokemons(offset = 0, limit = 20) {
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
-  const data = await response.json();
-  return data.results; // Returns an array of Pokémon results
+  const pokemonData = await response.json();
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return [pokemonData.results, pokemonData.count]; // Returns an array of Pokémon results
 }
 
 // Fetches detailed information about a Pokémon from its given URL
@@ -38,21 +41,31 @@ export async function getPokemonDetailsByURL(url) {
   }
 }
 
-// Fetches all Pokémon by repeatedly fetching batches until no more Pokémon are available
+// Fetches all Pokémon and their details
 export async function fetchAllPokemons() {
-  const allPokemons = [];
-  let offset = 0;
-  const limit = 100; // Number of Pokémon to fetch per request
-  let hasMore = true;
+  const allPokemons = []; // Stores detailed Pokémon information.
+  let offset = 0; // Current offset for API pagination.
+  const limit = 100; // Number of Pokémon fetched per batch.
+  let totalPokemonsCount = 0; // Total number of Pokémon available.
+  let hasMore = true; // Indicates if more Pokémon are available for fetching.
 
   while (hasMore) {
-    const pokemons = await getPokemons(offset, limit);
-    allPokemons.push(...pokemons); // Pushes fetched Pokémon into the allPokemons array
+    // Fetch a batch of Pokémon and update total count.
+    const [pokemons, pokemonCount] = await getPokemons(offset, limit);
+    if (totalPokemonsCount === 0) {
+      totalPokemonsCount = pokemonCount;
+    }
 
-    offset += limit; // Increment offset to fetch the next batch of Pokémon
-    hasMore = pokemons.length === limit; // Checks if there are more Pokémon to fetch
+    // Fetch detailed data for each Pokémon in the batch.
+    const detailsPromises = pokemons.map(pokemon => getPokemonDetailsByURL(pokemon.url));
+    const detailedPokemons = await Promise.all(detailsPromises);
+    allPokemons.push(...detailedPokemons);
+
+    // Prepare for the next batch.
+    offset += limit;
+    hasMore = pokemons.length === limit;
   }
 
-  return allPokemons; // Returns an array containing all fetched Pokémon
+  return [allPokemons, totalPokemonsCount];
 }
 
