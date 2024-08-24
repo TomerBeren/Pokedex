@@ -12,8 +12,14 @@ function PokemonList({ currentPage, pokemonsPerPage, handleCatchPokemon }) {
   // Fetch Pokémon data whenever the current page or the number of Pokémon per page changes
   useEffect(() => {
     fetchPokemonsForPage(currentPage, pokemonsPerPage);
+    // Scroll to the top of the page on page change
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Optional: Smooth scrolling
+    });
   }, [currentPage, pokemonsPerPage]);
 
+  
   // Apply the card animation effect whenever the currentPokemons array changes
   useEffect(() => {
     animateCards('.card');
