@@ -9,6 +9,12 @@
     font-size: 0.75rem !important; /* Base size */
 }
 
+.btn {
+    align-self: center;
+    margin-top: auto;
+}
+
+
 /* Medium screens (tablets, up to 768px) */
 @media (max-width: 768px) {
     .card .card-body .card-title {
@@ -78,4 +84,6 @@
         font-size: 0.9rem !important; /* Adjust font size for ultra large screens */
     }
 }
+
+
 

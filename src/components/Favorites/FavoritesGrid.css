@@ -31,7 +31,7 @@
 }
 
 /* Adjusting for two cards per row at 384px */
-@media (max-width: 384px) {
+@media (max-width: 430px) {
   .row > .col-4 {
     flex: 0 0 50%; /* Set to take half of the row */
     max-width: 50%;

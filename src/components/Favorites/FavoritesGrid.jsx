@@ -30,6 +30,14 @@ function FavoritesGrid({ favorites, showRemoveButton, handleRemoveFavorite }) {
     return () => window.removeEventListener('resize', handleResize);  // Cleanup on unmount
   }, []);
 
+  // Scroll to the top of the page on page change
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Optional: Smooth scrolling
+    });
+  }, [currentPage]);
+  
   // Calculate the range of favorites to display on the current page
   const startIndex = (currentPage - 1) * favoritesPerPage;
   const endIndex = startIndex + favoritesPerPage;
