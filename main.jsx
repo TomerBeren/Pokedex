@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import App from './src/App.jsx'
 import { ToastContainer } from 'react-toastify';
-import { PokemonProvider } from './contexts/PokemonContext.jsx';
+import { PokemonProvider } from './src/contexts/PokemonContext.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
