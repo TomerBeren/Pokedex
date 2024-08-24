@@ -13,7 +13,7 @@ function Navbar({ favoriteCount }) {
           Pokedex
         </Link>
         {/* Navigation links */}
-        <div className="collapse navbar-collapse justify-content-end">
+        <div className="navbar justify-content-end">
           <ul className="navbar-nav">
             <li className="nav-item">
               <Link className="nav-link" to="/favorites">
