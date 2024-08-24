@@ -18,54 +18,73 @@ export async function getPokemonDetailsByURL(url) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    // Transform the fetched data into a simplified structure
     const transformedData = {
       id: data.id,
       name: data.name,
-      sprites: {
-        front_default: data.sprites.front_default,
-        back_default: data.sprites.back_default,
-        front_shiny: data.sprites.front_shiny,
-        back_shiny: data.sprites.back_shiny,
-      },
+      sprite: data.sprites.front_default, // Fetches only the front default sprite for efficiency
       types: data.types.map(type => type.type.name),
       weight: data.weight,
       height: data.height,
       abilities: data.abilities.map(ability => ability.ability.name),
     };
-
     return transformedData; // Returns the transformed Pokémon data
   } catch (error) {
     console.error('Error fetching Pokémon details:', error);
-    throw error;  // Rethrow the error after logging it
+    throw error;
   }
 }
 
-// Fetches all Pokémon and their details
-export async function fetchAllPokemons() {
-  const allPokemons = []; // Stores detailed Pokémon information.
-  let offset = 0; // Current offset for API pagination.
-  const limit = 100; // Number of Pokémon fetched per batch.
-  let totalPokemonsCount = 0; // Total number of Pokémon available.
-  let hasMore = true; // Indicates if more Pokémon are available for fetching.
+// Fetches Pokémon for the current page and prefetches the next page
+export async function fetchPokemonsForPageAndPrefetch(currentPage, pokemonsPerPage) {
+  try {
+    const offset = (currentPage - 1) * pokemonsPerPage;
 
-  while (hasMore) {
-    // Fetch a batch of Pokémon and update total count.
-    const [pokemons, pokemonCount] = await getPokemons(offset, limit);
-    if (totalPokemonsCount === 0) {
-      totalPokemonsCount = pokemonCount;
+    // Fetch the current page's Pokémon data
+    const [pokemonList, totalCount] = await getPokemons(offset, pokemonsPerPage);
+    const validPokemons = await fetchDetailedPokemons(pokemonList);
+
+    // Prefetch the next page's Pokémon data if more pages exist
+    let nextPageData = [];
+    if (currentPage < Math.ceil(totalCount / pokemonsPerPage)) {
+      const nextOffset = offset + pokemonsPerPage;
+      nextPageData = await prefetchNextPage(nextOffset, pokemonsPerPage);
     }
 
-    // Fetch detailed data for each Pokémon in the batch.
-    const detailsPromises = pokemons.map(pokemon => getPokemonDetailsByURL(pokemon.url));
-    const detailedPokemons = await Promise.all(detailsPromises);
-    allPokemons.push(...detailedPokemons);
-
-    // Prepare for the next batch.
-    offset += limit;
-    hasMore = pokemons.length === limit;
+    return { validPokemons, totalCount, nextPageData }; // Returns current page data, total count, and prefetch data
+  } catch (error) {
+    console.error('Failed to fetch and prefetch pokemons', error);
+    throw error;
   }
-
-  return [allPokemons, totalPokemonsCount];
 }
 
+// Prefetches Pokémon data for the next page and preloads images
+export async function prefetchNextPage(offset, limit) {
+  try {
+    const [pokemonList] = await getPokemons(offset, limit);
+    const validPokemons = await fetchDetailedPokemons(pokemonList);
+    
+    // Preload images for the next page
+    const spriteUrls = validPokemons.map(pokemon => pokemon.sprite);
+    preloadImages(spriteUrls);
+
+    return validPokemons; // Returns the pre-fetched Pokémon data
+  } catch (error) {
+    console.error('Failed to prefetch next page pokemons', error);
+    throw error;
+  }
+}
+
+// Helper function to fetch and filter detailed Pokémon data
+async function fetchDetailedPokemons(pokemonList) {
+  const detailedPokemonsPromises = pokemonList.map(pokemon => getPokemonDetailsByURL(pokemon.url));
+  const detailedPokemons = await Promise.all(detailedPokemonsPromises);
+  return detailedPokemons.filter(pokemon => pokemon !== null); // Filters out null Pokémon data
+}
+
+// Preloads images to improve perceived performance
+function preloadImages(urls) {
+  urls.forEach(url => {
+    const img = new Image();
+    img.src = url; // Preloads image by setting its source
+  });
+}

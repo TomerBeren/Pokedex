@@ -1,27 +1,36 @@
 // src/contexts/PokemonContext.js
 
-import React, { createContext, useState, useEffect } from 'react';
-import { fetchInitialPokemons, fetchAllPokemonsData, getStoredPokemons, getStoredTotalPokemons } from '../services/pokemonStorage.service';
+import React, { createContext, useState } from 'react';
+import { fetchPokemonsForPageAndPrefetch } from '../services/pokemon.service';
 
-// Create a context for sharing Pokémon data across the React component tree.
 const PokemonContext = createContext();
 
 export const PokemonProvider = ({ children }) => { 
-    const [caughtPokemons, setCaughtPokemons] = useState([]); // State for managing caught Pokémon.
-    const [firstBatch, setFirstBatch] = useState(() => getStoredPokemons('firstBatch')); // State for storing the first batch of Pokémon (first 24)
-    const [allPokemons, setAllPokemons] = useState(() => getStoredPokemons('allPokemons')); // State for storing all Pokémon
-    const [totalPokemons, setTotalPokemons] = useState(() => getStoredTotalPokemons()); // State for storing the total count of Pokémon
+    const [caughtPokemons, setCaughtPokemons] = useState([]);
+    const [currentPokemons, setCurrentPokemons] = useState([]); 
+    const [totalPokemons, setTotalPokemons] = useState(0);
+    const [nextPagePokemons, setNextPagePokemons] = useState([]); 
 
-    // Effect that fetches Pokémon data when the component mounts.
-    useEffect(() => {
-        fetchInitialPokemons(setFirstBatch, setAllPokemons);
-        fetchAllPokemonsData(setAllPokemons, setTotalPokemons);
-    }, []);
+    // Function to fetch Pokémon for the current page and prefetch the next page's data
+    const handleFetchPokemonsForPage = async (currentPage, pokemonsPerPage) => {
+        const { validPokemons, totalCount, nextPageData } = await fetchPokemonsForPageAndPrefetch(currentPage, pokemonsPerPage);
+        // Update state with the fetched data
+        setCurrentPokemons(validPokemons);
+        setTotalPokemons(totalCount);
+        setNextPagePokemons(nextPageData);
+    };
 
     return (
-        // Provide Pokémon data and state management functions to child components.
-        <PokemonContext.Provider value={{ caughtPokemons, firstBatch, allPokemons, totalPokemons, setCaughtPokemons }}>
-            {children} {/* Render child components that now have access to Pokémon context. */}
+         // Provide Pokémon state and functions to the component tree
+        <PokemonContext.Provider value={{
+            caughtPokemons,
+            currentPokemons,
+            nextPagePokemons,
+            totalPokemons,
+            setCaughtPokemons,
+            fetchPokemonsForPage: handleFetchPokemonsForPage,
+        }}>
+            {children}
         </PokemonContext.Provider>
     );
 };

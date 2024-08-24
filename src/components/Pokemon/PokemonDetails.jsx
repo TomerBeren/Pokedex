@@ -8,48 +8,45 @@ import PokemonStats from './PokemonStats';
 import PokemonTypes from './PokemonTypes';
 import { isFavorite } from '../../services/favorites.service';
 import typeColors from '../../assets/typeColors';
+import { getCatchAttempts, setCatchAttempts, attemptCatch } from '../../services/pokemonCatch.service';
 
 function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
-  // State to track if the Pokemon is caught
+  // State to track if the Pokémon is caught
   const [isCaught, setIsCaught] = useState(false);
-  // State to disable the catch button while catching or after two attempts
-  const [catchDisabled, setCatchDisabled] = useState(false);
- // Initialize catchAttempts from local storage or empty object
-  const [catchAttempts, setCatchAttempts] = useState(() => {
-    return JSON.parse(localStorage.getItem('catchAttempts')) || {};
-  });
 
+  // State to disable the catch button if catching is in progress or if max attempts reached
+  const [catchDisabled, setCatchDisabled] = useState(false);
+
+  // State to manage local catch attempts, initialized from the service
+  const [catchAttempts, setLocalCatchAttempts] = useState(() => getCatchAttempts(pokemon?.id));
+
+  // Effect to update component state when the `pokemon` or `show` prop changes
   useEffect(() => {
     if (pokemon) {
-      const attempts = catchAttempts[pokemon.id] || 0;
-      // Check if the Pokemon is already caught or if it has reached the max attempts
-      setIsCaught(isFavorite(pokemon));
-      setCatchDisabled(isFavorite(pokemon) || attempts >= 2);
+      const attempts = getCatchAttempts(pokemon.id);  // Get the number of attempts from session storage
+      setIsCaught(isFavorite(pokemon));  // Check if the Pokémon is already caught (favorite)
+      setCatchDisabled(isFavorite(pokemon) || attempts >= 2);  // Disable catching if Pokémon is caught or max attempts reached
+      setLocalCatchAttempts(attempts);  // Update the local attempts state
     }
-  }, [pokemon, show, catchAttempts]);
+  }, [pokemon, show]);
 
-  useEffect(() => {
-    // Update local storage whenever catchAttempts changes
-    localStorage.setItem('catchAttempts', JSON.stringify(catchAttempts));
-  }, [catchAttempts]);
-
-  // Function to handle catching the Pokemon
+  // Function to handle the catch attempt
   const handleCatch = async () => {
-    const attempts = catchAttempts[pokemon.id] || 0;
+    const attempts = getCatchAttempts(pokemon.id);  // Get current attempts
 
-    // Disable the button if max attempts are reached
+    // If max attempts reached, disable the button and exit
     if (attempts >= 2) {
       setCatchDisabled(true);
       return;
     }
 
-    setCatchDisabled(true); // Disable the button during the catch attempt
-    const success = await attemptCatch(); // Simulate the catch attempt
+    setCatchDisabled(true);  // Disable the button during the catch attempt
+    const success = await attemptCatch();  // Simulate the catch attempt
 
     if (success) {
-      await onCatch(pokemon);
-      toast.success(`Caught ${pokemon.name}!`);
-      setIsCaught(true);
+      await onCatch(pokemon);  // Trigger the onCatch function if successful
+      toast.success(`Caught ${pokemon.name}!`);  // Show success message
+      setIsCaught(true);  // Mark Pokémon as caught
     } else {
       const newAttempts = attempts + 1;
       // Notify the user about the failed attempt
@@ -58,53 +55,33 @@ function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
       } else {
         toast.error(`Failed to catch ${pokemon.name}. Try again!`);
       }
-      // Update the catch attempts state
-      setCatchAttempts({
-        ...catchAttempts,
-        [pokemon.id]: newAttempts,
-      });
-      // Disable the button if max attempts are reached
-      setCatchDisabled(newAttempts >= 2);
+      setCatchAttempts(pokemon.id, newAttempts);  // Update the number of attempts in session storage
+      setLocalCatchAttempts(newAttempts);  // Update the local state with the new attempts
+      setCatchDisabled(newAttempts >= 2);  // Disable the button if max attempts are reached
     }
   };
 
-  // Simulate a catch attempt with a 50% chance of success
-  const attemptCatch = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const success = Math.random() > 0.5; // 50% chance of success
-        resolve(success);
-      }, 1000); // Simulate a 1 second delay
-    });
-  };
-
-  // Return null if no Pokemon is provided
+  // If no Pokémon is selected, don't render the modal
   if (!pokemon) return null;
 
-  // Get the primary type and corresponding background color
+  // Get the primary type of the Pokémon to determine the background color
   const primaryType = pokemon.types[0];
   const backgroundColor = typeColors[primaryType] || "#FFF";
 
   return (
     <Modal show={show} onHide={handleClose} centered dialogClassName="modal-centered">
       <Modal.Body>
-        {/* Pokemon card with dynamic background color */}
+        {/* Pokemon card with dynamic background color based on type */}
         <div className="pokemon-card" style={{ '--theme-color': backgroundColor }}>
-          {/* Pokemon ID */}
-          <div className="id">
-            <span>ID: {pokemon.id}</span>
-          </div>
-          {/* Pokemon image */}
-          <img
-            src={pokemon.sprites.front_default}
-            alt={pokemon.name}
-            className="pokemon-image"
-          />
-          {/* Pokemon name */}
+          {/* Display Pokémon ID */}
+          <div className="id"><span>ID: {pokemon.id}</span></div>
+          {/* Display Pokémon image */}
+          <img src={pokemon.sprite} alt={pokemon.name} className="pokemon-image" />
+          {/* Display Pokémon name */}
           <h2 className="poke-name">{pokemon.name}</h2>
-          {/* Pokemon types */}
+          {/* Display Pokémon types */}
           <PokemonTypes types={pokemon.types} typeColors={typeColors} />
-          {/* Pokemon stats and abilities */}
+          {/* Display Pokémon stats and abilities */}
           <div className="details">
             <PokemonStats height={pokemon.height} weight={pokemon.weight} />
             <PokemonAbilities abilities={pokemon.abilities} />
@@ -112,13 +89,11 @@ function PokemonDetails({ show, handleClose, pokemon, onCatch }) {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        {/* Back to list button */}
-        <Button variant="secondary" onClick={handleClose}>
-          Back to List
-        </Button>
-        {/* Catch button, disabled if already caught or after max attempts */}
+        {/* Button to close the modal and return to the list */}
+        <Button variant="secondary" onClick={handleClose}>Back to List</Button>
+        {/* Button to catch the Pokémon, disabled if caught or no attempts left */}
         <Button variant="primary" onClick={handleCatch} disabled={catchDisabled || isCaught}>
-          {isCaught ? "Caught" : (catchAttempts[pokemon.id] >= 2 ? "No More Attempts" : "Catch")}
+          {isCaught ? "Caught" : (catchAttempts >= 2 ? "No More Attempts" : "Catch")}
         </Button>
       </Modal.Footer>
     </Modal>
