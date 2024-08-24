@@ -1,89 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { getPagesToShow } from '../../services/paginationConfig.service';
+import { navigateToPreviousPage, navigateToNextPage } from '../../services/paginationNavigation.service';
+import { generatePageNumbers } from '../../services/paginationUtils.service';
+import { usePaginationState } from '../../services/paginationState.service';
 
 function Pagination({ currentPage, totalPages, handlePageChange, main }) {
-   // Number of page links to show in the pagination
-  let pagesToShow = 5
-  if(!main){
-    pagesToShow = 3;
-  }
-  
-  // Function to get the initial start page number
-  const getInitialStart = () => {
-    const start = Math.max(1, currentPage - Math.floor(pagesToShow / 2));
-    // Adjusts the start to not exceed range at initialization
-    return Math.min(start, Math.max(1, totalPages - pagesToShow + 1)); 
-  };
+  // Determine how many pages to show based on whether 'main' is true or false
+  const pagesToShow = getPagesToShow(main);
 
-  // State to track the dynamic start and end of the page range
-  const [dynamicStart, setDynamicStart] = useState(getInitialStart());
-  const [dynamicEnd, setDynamicEnd] = useState(Math.min(totalPages, getInitialStart() + pagesToShow - 1));
+  // Manage the current range of pages being displayed
+  const { start, end, setRange } = usePaginationState(currentPage, totalPages, pagesToShow);
 
-  useEffect(() => {
-    // Recalculate the start and end when totalPages changes
-    const start = getInitialStart();
-    setDynamicStart(start);
-    setDynamicEnd(Math.min(totalPages, start + pagesToShow - 1));
-  }, [totalPages]);
+  // Generate an array of page numbers to render in the pagination UI
+  const pageNumbers = generatePageNumbers(start, end);
 
-  useEffect(() => {
-    // Adjust the range when boundary conditions are met
-    if (currentPage > dynamicEnd) {
-      const newStart = dynamicStart + pagesToShow;
-      setDynamicStart(newStart);
-      setDynamicEnd(Math.min(totalPages, newStart + pagesToShow - 1));
-    } else if (currentPage < dynamicStart) {
-      const newStart = dynamicStart - pagesToShow;
-      setDynamicStart(newStart);
-      setDynamicEnd(Math.min(totalPages, newStart + pagesToShow - 1));
-    }
-  }, [currentPage]);
-
-  // Generate the page numbers to be displayed
-  const pageNumbers = [];
-  for (let i = dynamicStart; i <= dynamicEnd; i++) {
-    pageNumbers.push(i);
-  }
-
-  // Handle previous page button click
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      handlePageChange(currentPage - 1);
-      if (currentPage - 1 < dynamicStart) {
-        const newStart = Math.max(1, dynamicStart - pagesToShow);
-        setDynamicStart(newStart);
-        setDynamicEnd(Math.min(totalPages, newStart + pagesToShow - 1));
-      }
-    }
-  };
-
-  // Handle next page button click
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      handlePageChange(currentPage + 1);
-      if (currentPage + 1 > dynamicEnd) {
-        const newStart = dynamicStart + pagesToShow;
-        setDynamicStart(newStart);
-        setDynamicEnd(Math.min(totalPages, newStart + pagesToShow - 1));
-      }
-    }
+  // Handles page navigation by calling the appropriate navigation function
+  const handlePage = (navigationFunction) => {
+    const { newStart, newEnd, newPage } = navigationFunction(
+      currentPage, // Current active page
+      end,         // Current end of the displayed page range
+      start,       // Current start of the displayed page range
+      pagesToShow, // Total pages to show at a time
+      totalPages   // Total number of pages
+    );
+    setRange({ start: newStart, end: newEnd }); // Update the start and end range for page display
+    handlePageChange(newPage); // Change the page
   };
 
   return (
     <nav aria-label="Page navigation" className={`${main ? 'mt-3 d-flex justify-content-center' : ''}`}>
       <ul className="pagination">
-        {/* Previous page button */}
+        {/* Button to navigate to the previous page */}
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={handlePrevPage}>&lt;</button>
+          <button className="page-link" onClick={() => handlePage(navigateToPreviousPage)}>&lt;</button>
         </li>
-        {/* Page number buttons */}
+        {/* Render each page number in the current range */}
         {pageNumbers.map(page => (
           <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
             <button className="page-link" onClick={() => handlePageChange(page)}>{page}</button>
           </li>
         ))}
-        {/* Next page button */}
+        {/* Button to navigate to the next page */}
         <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={handleNextPage}>&gt;</button>
+          <button className="page-link" onClick={() => handlePage(navigateToNextPage)}>&gt;</button>
         </li>
       </ul>
     </nav>
