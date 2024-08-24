@@ -19,15 +19,24 @@
   width: 90%;
 }
 
-/* Card transition effects */
-.card {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+/* Base styles for the card */
+.card, .favorite-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
-/* Card hover effects */
-.card:hover {
-  transform: translateY(-10px) !important;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4) !important;
+/* Class to trigger the transition */
+.card.visible, .favorite-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover effects */
+.card:hover, .favorite-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 /* Change cursor to pointer on hover */
