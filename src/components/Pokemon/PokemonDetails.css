@@ -76,7 +76,7 @@ body {
 .poke-name {
   text-align: center;
   font-weight: 600;
-  margin-top: 20px; /* Add space between image and name */
+  margin-top: 1px; /* Add space between image and name */
   z-index: 2;
 }
 
@@ -195,7 +195,7 @@ body {
   }
 
   .pokemon-image {
-    width: 120px;
+    width: 170px;
   }
 }
 
