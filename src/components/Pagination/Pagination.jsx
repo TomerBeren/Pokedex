@@ -1,6 +1,6 @@
 import React from 'react';
 import { getPagesToShow } from '../../services/paginationConfig.service';
-import { navigateToPreviousPage, navigateToNextPage } from '../../services/paginationNavigation.service';
+import { navigateToPage } from '../../services/paginationNavigation.service';
 import { generatePageNumbers } from '../../services/paginationUtils.service';
 import { usePaginationState } from '../../services/paginationState.service';
 
@@ -14,17 +14,18 @@ function Pagination({ currentPage, totalPages, handlePageChange, main }) {
   // Generate an array of page numbers to render in the pagination UI
   const pageNumbers = generatePageNumbers(start, end);
 
-  // Handles page navigation by calling the appropriate navigation function
-  const handlePage = (navigationFunction) => {
-    const { newStart, newEnd, newPage } = navigationFunction(
-      currentPage, // Current active page
-      end,         // Current end of the displayed page range
-      start,       // Current start of the displayed page range
-      pagesToShow, // Total pages to show at a time
-      totalPages   // Total number of pages
+  // Handles page navigation (previous and next) by calling the appropriate navigation function
+  const handlePage = (direction) => {
+    const { newStart, newEnd, newPage } = navigateToPage(
+      currentPage,
+      start,
+      end,
+      pagesToShow,
+      totalPages,
+      direction
     );
-    setRange({ start: newStart, end: newEnd }); // Update the start and end range for page display
-    handlePageChange(newPage); // Change the page
+    setRange({ start: newStart, end: newEnd });
+    handlePageChange(newPage);
   };
 
   return (
@@ -32,7 +33,7 @@ function Pagination({ currentPage, totalPages, handlePageChange, main }) {
       <ul className="pagination">
         {/* Button to navigate to the previous page */}
         <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePage(navigateToPreviousPage)}>&lt;</button>
+          <button className="page-link" onClick={() => handlePage('prev')}>&lt;</button>
         </li>
         {/* Render each page number in the current range */}
         {pageNumbers.map(page => (
@@ -42,7 +43,7 @@ function Pagination({ currentPage, totalPages, handlePageChange, main }) {
         ))}
         {/* Button to navigate to the next page */}
         <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-          <button className="page-link" onClick={() => handlePage(navigateToNextPage)}>&gt;</button>
+          <button className="page-link" onClick={() => handlePage('next')}>&gt;</button>
         </li>
       </ul>
     </nav>
