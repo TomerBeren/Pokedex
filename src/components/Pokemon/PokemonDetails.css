@@ -67,7 +67,6 @@ body {
   width: 180px;
   margin: 20px auto;
   max-height: 200px;
-  margin-top: 80px; /* Adjust the margin to position under the circle */
   position: relative;
   z-index: 1;
 }
@@ -243,5 +242,3 @@ body {
     width: 240px;
   }
 }
-
-
