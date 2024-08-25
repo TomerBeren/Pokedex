@@ -35,7 +35,7 @@ export async function getPokemonDetailsByURL(url) {
 }
 
 // Fetches Pokémon for the current page and prefetches the next page
-export async function fetchPokemonsForPageAndPrefetch(currentPage, pokemonsPerPage) {
+export async function fetchPokemonsForPage(currentPage, pokemonsPerPage) {
   try {
     const offset = (currentPage - 1) * pokemonsPerPage;
 
@@ -43,14 +43,7 @@ export async function fetchPokemonsForPageAndPrefetch(currentPage, pokemonsPerPa
     const [pokemonList, totalCount] = await getPokemons(offset, pokemonsPerPage);
     const validPokemons = await fetchDetailedPokemons(pokemonList);
 
-    // Prefetch the next page's Pokémon data if more pages exist
-    let nextPageData = [];
-    if (currentPage < Math.ceil(totalCount / pokemonsPerPage)) {
-      const nextOffset = offset + pokemonsPerPage;
-      nextPageData = await prefetchNextPage(nextOffset, pokemonsPerPage);
-    }
-
-    return { validPokemons, totalCount, nextPageData }; // Returns current page data, total count, and prefetch data
+    return { validPokemons, totalCount }; // Return current page data and total count
   } catch (error) {
     console.error('Failed to fetch and prefetch pokemons', error);
     throw error;
@@ -67,7 +60,7 @@ export async function prefetchNextPage(offset, limit) {
     const spriteUrls = validPokemons.map(pokemon => pokemon.sprite);
     preloadImages(spriteUrls);
 
-    return validPokemons; // Returns the pre-fetched Pokémon data
+    return { offset, validPokemons }; // Returns the pre-fetched Pokémon data
   } catch (error) {
     console.error('Failed to prefetch next page pokemons', error);
     throw error;
