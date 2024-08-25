@@ -2,6 +2,7 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Live Deployment](#live-deployment)
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -9,6 +10,9 @@
 
 ## Introduction
 The Pokedex Application is a React-based project that allows users to browse and catch Pokémon. Users can view details of each Pokémon, attempt to catch them, and see their caught Pokémon in a favorites sidebar. The application integrates with the PokeAPI to fetch Pokémon data.
+
+## Live Deployment
+Check out the live deployment of the Pokedex here: [Pokedex Live Deployment](https://pokedex-phi-lemon-59.vercel.app/)
 
 ## Features
 - Browse a list of Pokémon with pagination.
