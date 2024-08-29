@@ -1,10 +1,10 @@
 // src/components/PokemonCard/PokemonCard.jsx
-import React, { useState, memo } from 'react';
+import React, { useState } from 'react';
 import PokemonDetails from './PokemonDetails';
 import './PokemonList.css';
 import './PokemonCard.css';
 
-const PokemonCard = memo(({ pokemon, showRemoveButton, className, handleCatchPokemon, handleRemoveFavorite }) => {
+function PokemonCard({ pokemon, showRemoveButton, className, handleCatchPokemon, handleRemoveFavorite }) {
   const [showModal, setShowModal] = useState(false);
 
   const handleShowModal = () => setShowModal(true);
@@ -58,6 +58,6 @@ const PokemonCard = memo(({ pokemon, showRemoveButton, className, handleCatchPok
       />
     </>
   );
-});
+}
 
 export default PokemonCard;
