@@ -69,16 +69,10 @@ export async function prefetchNextPage(offset, limit) {
 
 // Helper function to fetch and filter detailed Pokémon data
 async function fetchDetailedPokemons(pokemonList) {
-  const maxConcurrentRequests = 5; // Limit concurrent requests
-  let detailedPokemons = [];
+  const detailedPokemonsPromises = pokemonList.map(pokemon => getPokemonDetailsByURL(pokemon.url));
+  const detailedPokemons = await Promise.all(detailedPokemonsPromises);
+  return detailedPokemons.filter(pokemon => pokemon !== null);
 
-  for (let i = 0; i < pokemonList.length; i += maxConcurrentRequests) {
-    const batch = pokemonList.slice(i, i + maxConcurrentRequests);
-    const detailedPokemonsBatch = await Promise.all(batch.map(pokemon => getPokemonDetailsByURL(pokemon.url)));
-    detailedPokemons = detailedPokemons.concat(detailedPokemonsBatch.filter(pokemon => pokemon !== null));
-  }
-
-  return detailedPokemons;
 }
 
 // Preloads images to improve perceived performance
