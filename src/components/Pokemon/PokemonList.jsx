@@ -11,12 +11,19 @@ function PokemonList({ currentPage, pokemonsPerPage, handleCatchPokemon }) {
   
   // Fetch Pokémon data whenever the current page or the number of Pokémon per page changes
   useEffect(() => {
-    fetchPokemonsForPage(currentPage, pokemonsPerPage);
+    console.time('Fetch Time');
+    try {
+      fetchPokemonsForPage(currentPage, pokemonsPerPage);
+    } finally {
+      console.timeEnd('Fetch Time');
+    }
+    
     // Scroll to the top of the page on page change
     window.scrollTo({
       top: 0,
       behavior: 'smooth' // Optional: Smooth scrolling
     });
+    
   }, [currentPage, pokemonsPerPage]);
 
   
@@ -32,7 +39,6 @@ function PokemonList({ currentPage, pokemonsPerPage, handleCatchPokemon }) {
         {currentPokemons.map((pokemon) => (
           <div key={pokemon.id} className="col-custom d-flex mb-3">
             <PokemonCard 
-              key={pokemon.id}  // Ensure a unique key for each PokemonCard
               pokemon={pokemon} 
               className="card list-card" // Apply card and list-card classes for styling
               handleCatchPokemon={handleCatchPokemon} 

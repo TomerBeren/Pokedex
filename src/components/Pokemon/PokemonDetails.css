@@ -9,12 +9,15 @@
 /* Body background color */
 body {
   background-color: #eff3ff; /* Light blue background */
+  overflow-y: auto; /* Ensure body scroll is handled correctly */
 }
 
 /* Centered modal */
 .modal-centered .modal-dialog {
-  max-width: 60%; /* Default maximum width of the modal */
-  width: auto;
+  max-width: 600px; /* Set a specific max-width for consistency */
+  width: 100%; /* Ensure width is consistent */
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth transition */
+  transform: translateZ(0); /* Use hardware acceleration */
 }
 
 /* Styles for the Pokemon card */
@@ -30,6 +33,7 @@ body {
   border-radius: 10px; /* Rounded corners */
   color: #333; /* Dark text color */
   overflow: hidden; /* Hide overflowing elements */
+  min-height: 500px; /* Set a minimum height to avoid reflows */
 }
 
 /* Background circle inside the Pokemon card */
@@ -44,6 +48,7 @@ body {
   border-radius: 50%; /* Circular shape */
   transform: translateX(-50%);
   z-index: 0; /* Ensure the circle stays behind other content */
+  pointer-events: none; /* Prevent any interaction */
 }
 
 /* Styles for the Pokemon ID */
@@ -75,7 +80,7 @@ body {
 .poke-name {
   text-align: center;
   font-weight: 600;
-  margin-top: 1px; /* Add space between image and name */
+  margin-top: 1px; /* Adjust space between image and name */
   z-index: 2;
 }
 
