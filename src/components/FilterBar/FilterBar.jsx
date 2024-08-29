@@ -9,7 +9,7 @@ function FilterBar({ types, onNameChange, onTypeChange }) {
         <input 
           type="text" 
           className="form-control form-control-sm" 
-          placeholder="Search Favorites By Name" 
+          placeholder="Search Caught Pokémon" 
           onChange={(e) => onNameChange(e.target.value)} // Call onNameChange with the input value
         />
       </div>
