@@ -7,14 +7,14 @@
  * @param {number} [delay=50] - The delay in milliseconds between each card's animation.
  */
 export function animateCards(selector, delay = 50) {
-    // Select all elements that match the provided selector
-    const cards = document.querySelectorAll(selector);
-    
-    // Loop through each card and add the 'visible' class with a delay
-    cards.forEach((card, index) => {
+  const cards = document.querySelectorAll(selector);
+
+  cards.forEach((card, index) => {
+    requestAnimationFrame(() => {
       setTimeout(() => {
-        card.classList.add('visible');  // Add the 'visible' class to trigger CSS animation
-      }, index * delay);  // Delay each card's animation to create a staggered effect
+        card.classList.add('visible');
+      }, index * delay);
     });
-  }
+  });
+}
   
