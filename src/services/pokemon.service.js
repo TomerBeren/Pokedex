@@ -75,9 +75,12 @@ async function fetchDetailedPokemons(pokemonList) {
 }
 
 // Preloads images to improve perceived performance
-function preloadImages(urls) {
-  urls.forEach(url => {
-    const img = new Image();
-    img.src = url; // Preloads image by setting its source
-  });
+async function preloadImages(urls) {
+  await Promise.all(urls.map(url => {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = resolve;
+      img.src = url;
+    });
+  }));
 }

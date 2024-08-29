@@ -41,14 +41,16 @@ export const usePokemonState = () => {
         }
 
         // Prefetch the next page's data in the background
-        const nextOffset = currentPage * pokemonsPerPage;
-        prefetchNextPage(nextOffset, pokemonsPerPage)
-            .then(({ offset, validPokemons }) => {
-                // Store the prefetched Pokémon data and its offset
+        setTimeout(() => {
+            const nextOffset = currentPage * pokemonsPerPage;
+            prefetchNextPage(nextOffset, pokemonsPerPage)
+              .then(({ offset, validPokemons }) => {
+                 // Store the prefetched Pokémon data and its offset
                 setNextPagePokemons(validPokemons);
                 setNextPageOffset(offset);
-            })
-            .catch(err => console.error('Error prefetching next page:', err));
+              })
+              .catch(err => console.error('Error prefetching next page:', err));
+          }, 300); // Small delay before prefetching
     };
 
     // Return the state and functions to manage Pokémon data
